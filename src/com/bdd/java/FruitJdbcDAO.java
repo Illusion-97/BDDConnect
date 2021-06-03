@@ -63,13 +63,13 @@ public class FruitJdbcDAO implements CrudDao<Long,Fruit>, AutoCloseable{
 
     @Override
     public boolean update(Fruit object) {
+        int updated = 0;
         try (PreparedStatement preparedStatement = cm.getConnexion().prepareStatement("UPDATE fruit SET name = ?, dlc = ? WHERE id = ?")) {
             preparedStatement.setString(1, object.getName());
             preparedStatement.setDate(2, Date.valueOf(object.getDlc()));
             preparedStatement.setLong(3, object.getId());
-            preparedStatement.execute();
+            updated = preparedStatement.executeUpdate();
             cm.getConnexion().commit();
-            return true;
         } catch (SQLException e) {
             try {
                 cm.getConnexion().rollback();
@@ -77,8 +77,8 @@ public class FruitJdbcDAO implements CrudDao<Long,Fruit>, AutoCloseable{
                 r.printStackTrace();
             }
             e.printStackTrace();
-            return false;
         }
+        return updated > 0;
     }
 
     @Override
