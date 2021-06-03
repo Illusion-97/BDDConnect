@@ -14,8 +14,7 @@ public class FruitJdbcDAO implements CrudDao<Long,Fruit>, AutoCloseable{
 
     @Override
     public boolean create(Fruit object) {
-        String querySql = "INSERT INTO fruit(name,dlc) VALUES (?,?)";
-        try (PreparedStatement preparedStatement = cm.getConnexion().prepareStatement(querySql,Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = cm.getConnexion().prepareStatement("INSERT INTO fruit(name,dlc) VALUES (?,?)",Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, object.getName());
             preparedStatement.setDate(2, Date.valueOf(object.getDlc()));
             preparedStatement.execute();
@@ -40,8 +39,7 @@ public class FruitJdbcDAO implements CrudDao<Long,Fruit>, AutoCloseable{
     @Override
     public Fruit findById(Long aLong) {
         Fruit aFruit = null;
-        String querySql = "SELECT * FROM fruit WHERE id = ?";
-        try (PreparedStatement preparedStatement = cm.getConnexion().prepareStatement(querySql)) {
+        try (PreparedStatement preparedStatement = cm.getConnexion().prepareStatement("SELECT * FROM fruit WHERE id = ?")) {
             preparedStatement.setLong(1, aLong);
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
@@ -65,12 +63,11 @@ public class FruitJdbcDAO implements CrudDao<Long,Fruit>, AutoCloseable{
 
     @Override
     public boolean update(Fruit object) {
-        String querySql = "UPDATE fruit SET name = ?, dlc = ? WHERE id = ?";
-        try (PreparedStatement preparedStatement = cm.getConnexion().prepareStatement(querySql)) {
+        try (PreparedStatement preparedStatement = cm.getConnexion().prepareStatement("UPDATE fruit SET name = ?, dlc = ? WHERE id = ?")) {
             preparedStatement.setString(1, object.getName());
             preparedStatement.setDate(2, Date.valueOf(object.getDlc()));
             preparedStatement.setLong(3, object.getId());
-            preparedStatement.executeUpdate();
+            preparedStatement.execute();
             cm.getConnexion().commit();
             return true;
         } catch (SQLException e) {
@@ -86,10 +83,9 @@ public class FruitJdbcDAO implements CrudDao<Long,Fruit>, AutoCloseable{
 
     @Override
     public boolean delete(Long aLong) {
-        String querySql = "DELETE FROM fruit WHERE id = ?";
-        try (PreparedStatement preparedStatement = cm.getConnexion().prepareStatement(querySql)) {
+        try (PreparedStatement preparedStatement = cm.getConnexion().prepareStatement("DELETE FROM fruit WHERE id = ?")) {
             preparedStatement.setLong(1, aLong);
-            preparedStatement.executeUpdate();
+            preparedStatement.execute();
             cm.getConnexion().commit();
             return true;
         } catch (SQLException e) {
