@@ -18,7 +18,7 @@ public class Main {
             }
 
             System.out.println("\nFind random :");
-            Fruit f = fruitDao.findById((long) new Random().nextInt(lF.size()-1));
+            Fruit f = fruitDao.findById(lF.get(new Random().nextInt(lF.size())).getId());
             System.out.println("id : " + f.getId() +", name : " + f.getName() + ", DLC : " + f.getDlc());
 
             System.out.println("\nCreate");
